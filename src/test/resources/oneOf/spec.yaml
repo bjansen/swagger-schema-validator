@@ -1,0 +1,25 @@
+swagger: '2.0'
+
+info:
+  title: Sample API
+  version: "1"
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in Markdown.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+
+definitions:
+  User:
+    x-oneOf: [{required: ["id"]}, {required: ["name"]}]
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
