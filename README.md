@@ -15,8 +15,8 @@ if (report.isSuccess()) {
 
 ## Additional schema validations
 
-In addition to the subset of JSON-Schema Draft 4 already supported by Swagger 2 specification, this library
-adds support for the following JSON-Schema validation keywords:
+In addition to the subset of [JSON-Schema Draft 4](https://tools.ietf.org/html/draft-zyp-json-schema-04) already 
+supported by Swagger 2 specifications, this library adds support for the following JSON-Schema validation keywords:
 
 | Keyword             | Description                                                                                           |
 |---------------------|-------------------------------------------------------------------------------------------------------|
