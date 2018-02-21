@@ -13,6 +13,18 @@ if (report.isSuccess()) {
 }
 ```
 
+## Installation
+
+This library is available on Maven Central:
+
+```xml
+<dependency>
+    <groupId>com.github.bjansen</groupId>
+    <artifactId>swagger-schema-validator</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
 ## Additional schema validations
 
 In addition to the subset of [JSON-Schema Draft 4](https://tools.ietf.org/html/draft-zyp-json-schema-04) already 
