@@ -1,6 +1,6 @@
 # Swagger schema validator
 
-This library validates JSON objects against models defined in the `declarations` section of a Swagger 2 specification.
+This library validates JSON objects against models defined in the `definitions` section of a Swagger 2 specification.
 
 ```java
 InputStream spec = getClass().getResourceAsStream("mySpec.yaml");
