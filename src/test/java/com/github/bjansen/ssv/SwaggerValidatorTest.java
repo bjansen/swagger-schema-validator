@@ -51,4 +51,12 @@ class SwaggerValidatorTest {
         assertEquals(Json.mapper().readTree(getClass().getResourceAsStream("/transformations/spec-after.json")),
             schemaObject);
     }
+
+    @Test
+    void checkEmptyPayload() throws IOException {
+        InputStream spec = getClass().getResourceAsStream("/oneOf/spec.yaml");
+        SwaggerValidator validator = SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
+
+        assertThrows(ProcessingException.class, () -> validator.validate("", "/definitions/User"));
+    }
 }

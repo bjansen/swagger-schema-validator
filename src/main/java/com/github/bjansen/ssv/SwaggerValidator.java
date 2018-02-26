@@ -77,6 +77,10 @@ public class SwaggerValidator {
     public ProcessingReport validate(String jsonPayload, String definitionPointer) throws ProcessingException, IOException {
         JsonNode jsonNode = Json.mapper().readTree(jsonPayload);
 
+        if (jsonNode == null) {
+            throw new ProcessingException("The JSON payload could not be parsed correctly");
+        }
+
         return getSchema(definitionPointer).validate(jsonNode);
     }
 
