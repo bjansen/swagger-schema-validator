@@ -78,7 +78,7 @@ public class SwaggerValidator {
         JsonNode jsonNode = Json.mapper().readTree(jsonPayload);
 
         if (jsonNode == null) {
-            throw new ProcessingException("The JSON payload could not be parsed correctly");
+            throw new IOException("The JSON payload could not be parsed correctly");
         }
 
         return getSchema(definitionPointer).validate(jsonNode);

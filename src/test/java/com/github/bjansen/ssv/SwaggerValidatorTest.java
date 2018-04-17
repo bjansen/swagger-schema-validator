@@ -57,6 +57,6 @@ class SwaggerValidatorTest {
         InputStream spec = getClass().getResourceAsStream("/oneOf/spec.yaml");
         SwaggerValidator validator = SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
 
-        assertThrows(ProcessingException.class, () -> validator.validate("", "/definitions/User"));
+        assertThrows(IOException.class, () -> validator.validate("", "/definitions/User"));
     }
 }
