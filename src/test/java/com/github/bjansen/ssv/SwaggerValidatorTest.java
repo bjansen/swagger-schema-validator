@@ -2,6 +2,7 @@ package com.github.bjansen.ssv;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.LogLevel;
 import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableList;
@@ -26,6 +27,8 @@ class SwaggerValidatorTest {
         InputStreamReader sample = new InputStreamReader(getClass().getResourceAsStream("/oneOf/valid.json"));
         ProcessingReport report = validator.validate(CharStreams.toString(sample), "/definitions/User");
         assertTrue(report.isSuccess());
+        ImmutableList<ProcessingMessage> messages = ImmutableList.copyOf(report);
+        assertEquals(0, messages.size());
 
         sample = new InputStreamReader(getClass().getResourceAsStream("/oneOf/valid2.json"));
         report = validator.validate(CharStreams.toString(sample), "/definitions/User");
@@ -34,9 +37,26 @@ class SwaggerValidatorTest {
         sample = new InputStreamReader(getClass().getResourceAsStream("/oneOf/invalid.json"));
         report = validator.validate(CharStreams.toString(sample), "/definitions/User");
         assertFalse(report.isSuccess());
-        ImmutableList<ProcessingMessage> messages = ImmutableList.copyOf(report);
+        messages = ImmutableList.copyOf(report);
         assertEquals(1, messages.size());
         assertEquals("instance failed to match exactly one schema (matched 2 out of 2)", messages.get(0).getMessage());
+    }
+
+    @Test
+    void checkInt64Validation() throws IOException, ProcessingException {
+        InputStream spec = getClass().getResourceAsStream("/oneOf/spec.yaml");
+        SwaggerValidator validator = SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
+
+        InputStreamReader sample = new InputStreamReader(getClass().getResourceAsStream("/oneOf/invalid2.json"));
+        ProcessingReport report = validator.validate(CharStreams.toString(sample), "/definitions/User");
+
+        assertTrue(report.isSuccess());
+        ImmutableList<ProcessingMessage> messages = ImmutableList.copyOf(report);
+        assertEquals(1, messages.size());
+
+        ProcessingMessage message = messages.get(0);
+        assertEquals(LogLevel.WARNING, message.getLogLevel());
+        assertTrue(message.getMessage().contains("value for int64 leads to overflow (found: 9999"));
     }
 
     @Test

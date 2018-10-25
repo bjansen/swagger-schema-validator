@@ -2,10 +2,20 @@ package com.github.bjansen.ssv;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jsonschema.SchemaVersion;
+import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.ref.JsonRef;
+import com.github.fge.jsonschema.core.report.LogLevel;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.format.FormatAttribute;
+import com.github.fge.jsonschema.format.draftv3.DateAttribute;
+import com.github.fge.jsonschema.library.DraftV4Library;
+import com.github.fge.jsonschema.library.Library;
+import com.github.fge.jsonschema.library.LibraryBuilder;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.ImmutableMap;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
@@ -115,8 +125,10 @@ public class SwaggerValidator {
     private JsonSchema getSchema(String definitionPointer) throws ProcessingException {
         Pair<JsonNode, String> key = Pair.of(schemaObject, definitionPointer);
 
+        JsonSchemaFactory jsonSchemaFactory = SwaggerV20Library.schemaFactory(LogLevel.INFO, LogLevel.FATAL);
+
         if (!SCHEMA_CACHE.containsKey(key)) {
-            SCHEMA_CACHE.put(key, JsonSchemaFactory.byDefault().getJsonSchema(schemaObject, definitionPointer));
+            SCHEMA_CACHE.put(key, jsonSchemaFactory.getJsonSchema(schemaObject, definitionPointer));
         }
 
         return SCHEMA_CACHE.get(key);
