@@ -52,8 +52,6 @@ class SwaggerV20Library {
             .addFormatAttribute("double", DoubleAttribute.getInstance())
             .addFormatAttribute("date", DateAttribute.getInstance())
             .addFormatAttribute("byte", Base64Attribute.getInstance())
-//            .addKeyword(Nullable.getInstance())
-//            .addKeyword(Discriminator.getInstance())
             .freeze();
     }
 

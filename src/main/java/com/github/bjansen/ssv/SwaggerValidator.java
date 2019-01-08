@@ -1,21 +1,13 @@
 package com.github.bjansen.ssv;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.fge.jsonschema.SchemaVersion;
-import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.ref.JsonRef;
 import com.github.fge.jsonschema.core.report.LogLevel;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.format.FormatAttribute;
-import com.github.fge.jsonschema.format.draftv3.DateAttribute;
-import com.github.fge.jsonschema.library.DraftV4Library;
-import com.github.fge.jsonschema.library.Library;
-import com.github.fge.jsonschema.library.LibraryBuilder;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.ImmutableMap;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
@@ -26,6 +18,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class SwaggerValidator {
 
     private static final Map<Pair<JsonNode, String>, JsonSchema> SCHEMA_CACHE = new HashMap<>();
@@ -85,7 +78,14 @@ public class SwaggerValidator {
      * @throws IOException         if the payload is not a valid JSON object
      */
     public ProcessingReport validate(String jsonPayload, String definitionPointer) throws ProcessingException, IOException {
-        JsonNode jsonNode = Json.mapper().readTree(jsonPayload);
+        return validate(jsonPayload, definitionPointer, Json.mapper());
+    }
+
+    /**
+     * Same as {@link #validate(String, String)} but with a custom JSON deserializer.
+     */
+    public ProcessingReport validate(String jsonPayload, String definitionPointer, ObjectMapper jsonMapper) throws ProcessingException, IOException {
+        JsonNode jsonNode = jsonMapper.readTree(jsonPayload);
 
         if (jsonNode == null) {
             throw new IOException("The JSON payload could not be parsed correctly");
