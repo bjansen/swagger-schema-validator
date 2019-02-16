@@ -1,4 +1,4 @@
-# Swagger schema validator
+# Swagger schema validator ![](https://img.shields.io/maven-central/v/com.github.bjansen/swagger-schema-validator.svg?style=flat)
 
 This library validates JSON objects against models defined in the `definitions` section of a Swagger 2 specification.
 
@@ -21,7 +21,7 @@ This library is available on Maven Central:
 <dependency>
     <groupId>com.github.bjansen</groupId>
     <artifactId>swagger-schema-validator</artifactId>
-    <version>0.1.1</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
