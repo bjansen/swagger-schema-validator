@@ -86,12 +86,25 @@ public class SwaggerValidator {
      */
     public ProcessingReport validate(String jsonPayload, String definitionPointer, ObjectMapper jsonMapper) throws ProcessingException, IOException {
         JsonNode jsonNode = jsonMapper.readTree(jsonPayload);
-
         if (jsonNode == null) {
             throw new IOException("The JSON payload could not be parsed correctly");
         }
 
-        return getSchema(definitionPointer).validate(jsonNode);
+        return validate(jsonNode, definitionPointer);
+    }
+
+    /**
+     * Validates the given {@code jsonPayload} against the definition located at {@code definitionPointer}.
+     *
+     * @param jsonPayload       the JSON payload to validate
+     * @param definitionPointer the path to the schema object the payload should be validated against,
+     *                          for example {@code /definitions/User}
+     * @return a validation report
+     * @throws ProcessingException in case a processing error occurred during validation
+     * @throws IOException         if the payload is not a valid JSON object
+     */
+    public ProcessingReport validate(JsonNode jsonPayload, String definitionPointer) throws ProcessingException {
+        return getSchema(definitionPointer).validate(jsonPayload);
     }
 
     /**
