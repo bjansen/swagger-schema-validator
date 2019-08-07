@@ -96,12 +96,11 @@ public class SwaggerValidator {
     /**
      * Validates the given {@code jsonPayload} against the definition located at {@code definitionPointer}.
      *
-     * @param jsonPayload       the JSON payload to validate
+     * @param jsonPayload       the JSON payload (as a JsonNode) to validate
      * @param definitionPointer the path to the schema object the payload should be validated against,
      *                          for example {@code /definitions/User}
      * @return a validation report
      * @throws ProcessingException in case a processing error occurred during validation
-     * @throws IOException         if the payload is not a valid JSON object
      */
     public ProcessingReport validate(JsonNode jsonPayload, String definitionPointer) throws ProcessingException {
         return getSchema(definitionPointer).validate(jsonPayload);
