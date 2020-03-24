@@ -1,0 +1,7 @@
+{
+    "name": "John",
+    "address": {
+        "line1": "addr 1",
+        "line2": "addr 2"
+    }
+}

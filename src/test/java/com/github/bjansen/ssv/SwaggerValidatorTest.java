@@ -9,10 +9,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import io.swagger.util.Json;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
@@ -21,8 +23,7 @@ class SwaggerValidatorTest {
 
     @Test
     void checkOneOf() throws IOException, ProcessingException {
-        InputStream spec = getClass().getResourceAsStream("/oneOf/spec.yaml");
-        SwaggerValidator validator = SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
 
         InputStreamReader sample = new InputStreamReader(getClass().getResourceAsStream("/oneOf/valid.json"));
         ProcessingReport report = validator.validate(CharStreams.toString(sample), "/definitions/User");
@@ -44,8 +45,7 @@ class SwaggerValidatorTest {
 
     @Test
     void checkInt64Validation() throws IOException, ProcessingException {
-        InputStream spec = getClass().getResourceAsStream("/oneOf/spec.yaml");
-        SwaggerValidator validator = SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
 
         InputStreamReader sample = new InputStreamReader(getClass().getResourceAsStream("/oneOf/invalid2.json"));
         ProcessingReport report = validator.validate(CharStreams.toString(sample), "/definitions/User");
@@ -73,10 +73,72 @@ class SwaggerValidatorTest {
     }
 
     @Test
-    void checkEmptyPayload() throws IOException {
-        InputStream spec = getClass().getResourceAsStream("/oneOf/spec.yaml");
-        SwaggerValidator validator = SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
+    void should_throw_IOException_when_payload_is_empty() throws IOException {
+        // Given
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
 
-        assertThrows(IOException.class, () -> validator.validate("", "/definitions/User"));
+        // When
+        final Executable executable = () -> validator.validate("", "/definitions/User");
+
+        // Then
+        assertThrows(IOException.class, executable);
+    }
+
+    @Test
+    void should_accept_valid_document_when_deepCheck_is_true() throws IOException, ProcessingException {
+        // Given
+        SwaggerValidator validator = buildValidator("/deepCheck/spec.yaml");
+        JsonNode sample = buildSample("/deepCheck/valid.json");
+
+        // When
+        ProcessingReport report = validator.validate(sample, "/definitions/User", true);
+
+        // Then
+        assertTrue(report.isSuccess());
+    }
+
+    @Test
+    void should_report_nested_errors_when_deepCheck_is_true() throws IOException, ProcessingException {
+        // Given
+        SwaggerValidator validator = buildValidator("/deepCheck/spec.yaml");
+        JsonNode sample = buildSample("/deepCheck/invalid.json");
+
+        // When
+        ProcessingReport report = validator.validate(sample, "/definitions/User", true);
+
+        // Then
+        assertFalse(report.isSuccess());
+
+        final ArrayList<ProcessingMessage> exceptions = new ArrayList<>();
+        report.iterator().forEachRemaining(exceptions::add);
+
+        assertEquals(2, exceptions.size());
+    }
+
+    @Test
+    void should_not_report_nested_errors_when_deepCheck_is_false() throws IOException, ProcessingException {
+        // Given
+        SwaggerValidator validator = buildValidator("/deepCheck/spec.yaml");
+        JsonNode sample = buildSample("/deepCheck/invalid.json");
+
+        // When
+        ProcessingReport report = validator.validate(sample, "/definitions/User", false);
+
+        // Then
+        assertFalse(report.isSuccess());
+
+        final ArrayList<ProcessingMessage> exceptions = new ArrayList<>();
+        report.iterator().forEachRemaining(exceptions::add);
+
+        assertEquals(1, exceptions.size());
+    }
+
+    private SwaggerValidator buildValidator(String pathToSpec) throws IOException {
+        InputStream spec = getClass().getResourceAsStream(pathToSpec);
+        return SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
+    }
+
+    private JsonNode buildSample(String s) throws IOException {
+        return Json.mapper().readTree(new InputStreamReader(getClass().getResourceAsStream(s)));
     }
 }

@@ -18,7 +18,6 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("WeakerAccess")
 public class SwaggerValidator {
 
     private static final Map<Pair<JsonNode, String>, JsonSchema> SCHEMA_CACHE = new HashMap<>();
@@ -94,16 +93,24 @@ public class SwaggerValidator {
     }
 
     /**
+     * Same as {@link #validate(JsonNode, String, boolean)} with {@code deepCheck = false}.
+     */
+    public ProcessingReport validate(JsonNode jsonPayload, String definitionPointer) throws ProcessingException {
+        return validate(jsonPayload, definitionPointer, false);
+    }
+
+    /**
      * Validates the given {@code jsonPayload} against the definition located at {@code definitionPointer}.
      *
      * @param jsonPayload       the JSON payload (as a JsonNode) to validate
      * @param definitionPointer the path to the schema object the payload should be validated against,
      *                          for example {@code /definitions/User}
+     * @param deepCheck         validate children even if the container (array, object) is invalid
      * @return a validation report
      * @throws ProcessingException in case a processing error occurred during validation
      */
-    public ProcessingReport validate(JsonNode jsonPayload, String definitionPointer) throws ProcessingException {
-        return getSchema(definitionPointer).validate(jsonPayload);
+    public ProcessingReport validate(JsonNode jsonPayload, String definitionPointer, boolean deepCheck) throws ProcessingException {
+        return getSchema(definitionPointer).validate(jsonPayload, deepCheck);
     }
 
     /**
