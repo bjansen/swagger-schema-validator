@@ -77,6 +77,9 @@ public class SwaggerValidator {
      * @throws IOException         if the payload is not a valid JSON object
      */
     public ProcessingReport validate(String jsonPayload, String definitionPointer) throws ProcessingException, IOException {
+        if (jsonPayload == null || jsonPayload.equals("")) {
+            throw new IOException("Payload is empty");
+        }
         return validate(jsonPayload, definitionPointer, Json.mapper());
     }
 
