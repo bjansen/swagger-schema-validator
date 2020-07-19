@@ -151,6 +151,19 @@ class SwaggerValidatorTest {
         assertEquals(1, exceptions.size());
     }
 
+    @Test
+    void checkUnknownDefinition() throws IOException {
+        // Given
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+
+        // When
+        final Executable executable = () -> validator.validate("{}", "/definitions/Blablabla");
+
+        // Then
+        Exception e = assertThrows(ProcessingException.class, executable);
+        assertTrue(e.getMessage().contains("Unknown definition /definitions/Blablabla"));
+    }
+
     private SwaggerValidator buildValidator(String pathToSpec) throws IOException {
         InputStream spec = getClass().getResourceAsStream(pathToSpec);
         return SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
