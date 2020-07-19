@@ -1,0 +1,38 @@
+swagger: '2.0'
+
+info:
+  title: Sample API
+  version: "1"
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in Markdown.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+
+definitions:
+  Pet:
+    type: object
+    required:
+      - pet_type
+    properties:
+      pet_type:
+        type: string
+    discriminator:
+      propertyName: pet_type
+  Dog:     # "Dog" is a value for the pet_type property (the discriminator value)
+    x-allOf: # Combines the main `Pet` schema with `Dog`-specific properties
+      - $ref: '#/definitions/Pet'
+      - type: object
+        # all other properties specific to a `Dog`
+        properties:
+          bark:
+            type: boolean
+          breed:
+            type: string
+            enum: [Dingo, Husky, Retriever, Shepherd]

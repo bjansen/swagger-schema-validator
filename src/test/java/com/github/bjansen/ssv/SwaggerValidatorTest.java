@@ -44,6 +44,24 @@ class SwaggerValidatorTest {
     }
 
     @Test
+    void checkAllOf() throws IOException, ProcessingException {
+        SwaggerValidator validator = buildValidator("/allOf/spec.yaml");
+
+        InputStreamReader sample = new InputStreamReader(getClass().getResourceAsStream("/allOf/valid.json"));
+        ProcessingReport report = validator.validate(CharStreams.toString(sample), "/definitions/Dog");
+        assertTrue(report.isSuccess());
+        ImmutableList<ProcessingMessage> messages = ImmutableList.copyOf(report);
+        assertEquals(0, messages.size());
+
+        sample = new InputStreamReader(getClass().getResourceAsStream("/allOf/invalid.json"));
+        report = validator.validate(CharStreams.toString(sample), "/definitions/Dog");
+        assertFalse(report.isSuccess());
+        messages = ImmutableList.copyOf(report);
+        assertEquals(1, messages.size());
+        assertEquals("instance failed to match all required schemas (matched only 1 out of 2)", messages.get(0).getMessage());
+    }
+
+    @Test
     void checkInt64Validation() throws IOException, ProcessingException {
         SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
 
