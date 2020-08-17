@@ -164,6 +164,19 @@ class SwaggerValidatorTest {
         assertTrue(e.getMessage().contains("Unknown definition /definitions/Blablabla"));
     }
 
+    @Test
+    void should_support_references_to_definitions_in_same_file() throws IOException, ProcessingException {
+        // Given
+        SwaggerValidator validator = buildValidator("/references/spec-issue14.json");
+        JsonNode sample = buildSample("/references/sample-issue14.json");
+
+        // When
+        final ProcessingReport report = validator.validate(sample, "/definitions/Response");
+
+        // Then
+        assertTrue(report.isSuccess());
+    }
+
     private SwaggerValidator buildValidator(String pathToSpec) throws IOException {
         InputStream spec = getClass().getResourceAsStream(pathToSpec);
         return SwaggerValidator.forYamlSchema(new InputStreamReader(spec));

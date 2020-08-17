@@ -1,0 +1,58 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Sample API",
+        "version": "1"
+    },
+    "definitions": {
+        "Response": {
+            "type": "object",
+            "required": [
+                "asyncRequestId",
+                "result"
+            ],
+            "properties": {
+                "asyncRequestId": {
+                    "type": "string"
+                },
+                "beginTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "endTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/AsyncResult"
+                },
+                "sceuid": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "AsyncResult": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
