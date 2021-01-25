@@ -6,7 +6,7 @@
 
     <groupId>com.github.bjansen</groupId>
     <artifactId>swagger-schema-validator</artifactId>
-    <version>0.4.1</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Swagger schema validator</name>
     <description>Validates JSON objects against a schema defined in a Swagger 2 specification.</description>
