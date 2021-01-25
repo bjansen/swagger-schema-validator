@@ -8,6 +8,7 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import io.swagger.util.Json;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -175,6 +176,29 @@ class SwaggerValidatorTest {
 
         // Then
         assertTrue(report.isSuccess());
+    }
+
+    @Test
+    void check_issue_13() throws IOException, ProcessingException {
+        // Given
+        SwaggerValidator validator = buildValidator("/issue13/spec-issue13.json");
+        JsonNode sample = Json.mapper().readTree("{\"hell\":\"World\",\"there\":\"Hi\"}");
+
+        // When
+        final ProcessingReport report = validator.validate(sample, "/definitions/ResponseBean", true);
+
+        // Then
+        assertFalse(report.isSuccess());
+        List<ProcessingMessage> messages = ImmutableList.copyOf(report);
+        assertEquals(
+            "object instance has properties which are not allowed by the schema: [\"hell\"]",
+            messages.get(0).getMessage()
+        );
+        assertEquals(
+            "object has missing required properties ([\"hello\"])",
+            messages.get(1).getMessage()
+        );
+        System.out.println(messages);
     }
 
     private SwaggerValidator buildValidator(String pathToSpec) throws IOException {

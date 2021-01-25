@@ -1,0 +1,22 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Sample API",
+        "version": "1"
+    },
+    "definitions": {
+        "ResponseBean": {
+            "type": "object",
+            "required": ["hello"],
+            "additionalProperties": false,
+            "properties": {
+                "hello": {
+                    "type": "string"
+                },
+                "there": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
