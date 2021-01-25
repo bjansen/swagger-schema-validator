@@ -12,6 +12,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.common.collect.ImmutableMap;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
+import java.util.Collections;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
@@ -41,8 +42,9 @@ public class SwaggerValidator {
 
     private final JsonNode schemaObject;
 
-    private SwaggerValidator(JsonNode schemaObject) {
-        this.schemaObject = transform(schemaObject);
+    private SwaggerValidator(JsonNode schemaObject, Map<String, String> customTransformations) {
+        JsonNode transformed = transform(schemaObject, customTransformations);
+        this.schemaObject = transform(transformed, TRANSFORMATIONS);
     }
 
     /**
@@ -53,7 +55,7 @@ public class SwaggerValidator {
      * @throws IOException if the Swagger spec is not a valid JSON object
      */
     public static SwaggerValidator forJsonSchema(Reader swaggerSpec) throws IOException {
-        return new SwaggerValidator(Json.mapper().readTree(swaggerSpec));
+        return new SwaggerValidator(Json.mapper().readTree(swaggerSpec), Collections.emptyMap());
     }
 
     /**
@@ -64,7 +66,20 @@ public class SwaggerValidator {
      * @throws IOException if the Swagger spec is not a valid YAML object
      */
     public static SwaggerValidator forYamlSchema(Reader swaggerSpec) throws IOException {
-        return new SwaggerValidator(Yaml.mapper().readTree(swaggerSpec));
+        return new SwaggerValidator(Yaml.mapper().readTree(swaggerSpec), Collections.emptyMap());
+    }
+
+    /**
+     * Creates a Swagger schema validator based on the given custom {@link JsonNode}.
+     * This factory method also allows defining extra transformations to be made on the
+     * validated input, which will be applied <i>before</i> the built-in {@link #TRANSFORMATIONS}.
+     *
+     * @param jsonNode the Swagger spec (parsed manually)
+     * @param customTransformations a map of properties renamings to apply to definitions
+     * @return a validator for that spec
+     */
+    public static SwaggerValidator forJsonNode(JsonNode jsonNode, Map<String, String> customTransformations) {
+        return new SwaggerValidator(jsonNode, customTransformations);
     }
 
     /**
@@ -122,9 +137,10 @@ public class SwaggerValidator {
      * of the given schema.
      *
      * @param schema the Swagger schema containing transformations to apply (x-oneOf, etc).
+     * @param transformations property renamings to be applied to definitions
      * @return the patched schema
      */
-    private JsonNode transform(JsonNode schema) {
+    private JsonNode transform(JsonNode schema, Map<String, String> transformations) {
         if (!(schema instanceof ObjectNode)) {
             return schema;
         }
@@ -133,7 +149,7 @@ public class SwaggerValidator {
 
         if (schemaNode.has("definitions")) {
             for (JsonNode definition : schemaNode.get("definitions")) {
-                TRANSFORMATIONS.forEach((from, to) -> {
+                transformations.forEach((from, to) -> {
                     if (definition instanceof ObjectNode && definition.has(from)) {
                         ((ObjectNode) definition).set(to, definition.get(from));
                         ((ObjectNode) definition).remove(from);

@@ -8,6 +8,7 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import io.swagger.util.Json;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -179,7 +180,7 @@ class SwaggerValidatorTest {
     }
 
     @Test
-    void check_issue_13() throws IOException, ProcessingException {
+    void should_support_forbidden_additional_properties() throws IOException, ProcessingException {
         // Given
         SwaggerValidator validator = buildValidator("/issue13/spec-issue13.json");
         JsonNode sample = Json.mapper().readTree("{\"hell\":\"World\",\"there\":\"Hi\"}");
@@ -198,7 +199,26 @@ class SwaggerValidatorTest {
             "object has missing required properties ([\"hello\"])",
             messages.get(1).getMessage()
         );
-        System.out.println(messages);
+    }
+
+    @Test
+    void should_support_custom_JsonNode() throws IOException, ProcessingException {
+        // Given
+        InputStream spec = getClass().getResourceAsStream("/jsonNode/spec-JsonNode.json");
+        JsonNode schema = Json.mapper().readTree(spec);
+
+        HashMap<String, String> transformations = new HashMap<>();
+        transformations.put("x-oneof", "x-oneOf");
+
+        SwaggerValidator validator = SwaggerValidator.forJsonNode(schema, transformations);
+        JsonNode sample = Json.mapper().readTree("{}");
+
+        // When
+        final ProcessingReport report = validator.validate(sample, "/definitions/User", true);
+
+        // Then
+        assertFalse(report.isSuccess());
+        assertTrue(report.toString().contains("instance failed to match exactly one schema (matched 0 out of 2)"));
     }
 
     private SwaggerValidator buildValidator(String pathToSpec) throws IOException {
