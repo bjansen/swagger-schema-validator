@@ -36,7 +36,12 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <junit.version>5.7.0</junit.version>
+
+        <sonar.projectKey>bjansen_swagger-schema-validator</sonar.projectKey>
+        <sonar.organization>bjansen</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
