@@ -1,4 +1,4 @@
-# Swagger schema validator ![](https://img.shields.io/maven-central/v/com.github.bjansen/swagger-schema-validator.svg?style=flat)
+# Swagger schema validator ![](https://img.shields.io/maven-central/v/com.github.bjansen/swagger-schema-validator.svg?style=flat) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swagger-schema-validator&metric=alert_status)](https://sonarcloud.io/dashboard?id=swagger-schema-validator)
 
 This library validates JSON objects against models defined in the `definitions` section of a Swagger 2 specification.
 
