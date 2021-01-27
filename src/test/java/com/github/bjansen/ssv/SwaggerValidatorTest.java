@@ -221,6 +221,25 @@ class SwaggerValidatorTest {
         assertTrue(report.toString().contains("instance failed to match exactly one schema (matched 0 out of 2)"));
     }
 
+    @Test
+    void should_accept_example_and_xml() throws IOException, ProcessingException {
+        // Given
+        SwaggerValidator validator = buildValidator("/swagger/keywords.json");
+        JsonNode sample = Json.mapper().readTree("{\"name\": \"\"}");
+
+        // When
+        final ProcessingReport report = validator.validate(sample, "/definitions/User", true);
+
+        // Then
+        assertTrue(report.isSuccess());
+        List<ProcessingMessage> messages = ImmutableList.copyOf(report);
+        long warnings = messages.stream()
+            .filter(msg -> msg.getLogLevel() == LogLevel.WARNING)
+            .count();
+
+        assertEquals(0, warnings, "Unexpected warnings: " + report.toString());
+    }
+
     private SwaggerValidator buildValidator(String pathToSpec) throws IOException {
         InputStream spec = getClass().getResourceAsStream(pathToSpec);
         return SwaggerValidator.forYamlSchema(new InputStreamReader(spec));
