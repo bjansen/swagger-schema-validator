@@ -8,8 +8,6 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
 import io.swagger.util.Json;
-import java.util.HashMap;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -17,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
@@ -219,6 +219,21 @@ class SwaggerValidatorTest {
         // Then
         assertFalse(report.isSuccess());
         assertTrue(report.toString().contains("instance failed to match exactly one schema (matched 0 out of 2)"));
+    }
+
+    @Test
+    void should_transform_nested_properties() throws IOException, ProcessingException {
+        // Given
+        InputStream spec = getClass().getResourceAsStream("/nested/spec-nested.json");
+        SwaggerValidator validator = SwaggerValidator.forJsonSchema(new InputStreamReader(spec));
+
+        // When
+        final ProcessingReport report = validator.validate("{\"someProperty\": [{}]}", "/definitions/MyModel");
+
+        // Then
+        assertFalse(report.isSuccess());
+        assertTrue(report.toString()
+            .contains("error: instance failed to match exactly one schema (matched 0 out of 2)"));
     }
 
     private SwaggerValidator buildValidator(String pathToSpec) throws IOException {

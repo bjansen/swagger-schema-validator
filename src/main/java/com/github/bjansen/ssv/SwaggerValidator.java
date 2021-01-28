@@ -12,11 +12,11 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.common.collect.ImmutableMap;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
-import java.util.Collections;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -149,16 +149,28 @@ public class SwaggerValidator {
 
         if (schemaNode.has("definitions")) {
             for (JsonNode definition : schemaNode.get("definitions")) {
-                transformations.forEach((from, to) -> {
-                    if (definition instanceof ObjectNode && definition.has(from)) {
-                        ((ObjectNode) definition).set(to, definition.get(from));
-                        ((ObjectNode) definition).remove(from);
-                    }
-                });
+                transformRecursively(definition, transformations);
             }
         }
 
         return schema;
+    }
+
+    private void transformRecursively(JsonNode node, Map<String, String> transformations) {
+        if (node.isObject()) {
+            ObjectNode objectNode = (ObjectNode) node;
+
+            transformations.forEach((from, to) -> {
+                if (objectNode.has(from)) {
+                    objectNode.set(to, objectNode.get(from));
+                    objectNode.remove(from);
+                }
+            });
+        }
+
+        for (JsonNode child : node) {
+            transformRecursively(child, transformations);
+        }
     }
 
     private JsonSchema getSchema(String definitionPointer) throws ProcessingException {

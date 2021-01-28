@@ -1,0 +1,23 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Sample API",
+        "version": "1"
+    },
+    "definitions": {
+        "MyModel": {
+            "additionalProperties": false,
+            "properties": {
+                "someProperty": {
+                    "type": "array",
+                    "items": {
+                        "x-oneOf": [
+                            {"required": ["id"]},
+                            {"required": ["name"]}
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
