@@ -16,12 +16,15 @@
 package com.github.bjansen.ssv;
 
 import com.github.bjansen.ssv.formats.*;
+import com.github.bjansen.ssv.keywords.*;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.core.messages.JsonSchemaSyntaxMessageBundle;
 import com.github.fge.jsonschema.core.report.ListReportProvider;
 import com.github.fge.jsonschema.core.report.LogLevel;
 import com.github.fge.jsonschema.format.draftv3.DateAttribute;
 import com.github.fge.jsonschema.library.DraftV4Library;
+import com.github.fge.jsonschema.library.Keyword;
+import com.github.fge.jsonschema.library.KeywordBuilder;
 import com.github.fge.jsonschema.library.Library;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.messages.JsonSchemaValidationBundle;
@@ -52,6 +55,13 @@ class SwaggerV20Library {
             .addFormatAttribute("double", DoubleAttribute.getInstance())
             .addFormatAttribute("date", DateAttribute.getInstance())
             .addFormatAttribute("byte", Base64Attribute.getInstance())
+
+            .addKeyword(DiscriminatorKeyword.getInstance())
+            .addKeyword(ReadOnlyKeyword.getInstance())
+            .addKeyword(XmlKeyword.getInstance())
+            .addKeyword(ExternalDocsKeyword.getInstance())
+            .addKeyword(ExampleKeyword.getInstance())
+
             .freeze();
     }
 
