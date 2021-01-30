@@ -16,8 +16,7 @@
 package com.github.bjansen.ssv;
 
 import com.github.bjansen.ssv.formats.*;
-import com.github.bjansen.ssv.keywords.ExampleKeyword;
-import com.github.bjansen.ssv.keywords.XmlKeyword;
+import com.github.bjansen.ssv.keywords.*;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.core.messages.JsonSchemaSyntaxMessageBundle;
 import com.github.fge.jsonschema.core.report.ListReportProvider;
@@ -57,8 +56,11 @@ class SwaggerV20Library {
             .addFormatAttribute("date", DateAttribute.getInstance())
             .addFormatAttribute("byte", Base64Attribute.getInstance())
 
-            .addKeyword(ExampleKeyword.getInstance())
+            .addKeyword(DiscriminatorKeyword.getInstance())
+            .addKeyword(ReadOnlyKeyword.getInstance())
             .addKeyword(XmlKeyword.getInstance())
+            .addKeyword(ExternalDocsKeyword.getInstance())
+            .addKeyword(ExampleKeyword.getInstance())
 
             .freeze();
     }

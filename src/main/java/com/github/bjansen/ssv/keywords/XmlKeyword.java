@@ -17,15 +17,15 @@ public class XmlKeyword {
 
     public static Keyword getInstance() {
         return Keyword.newBuilder("xml")
-            .withSyntaxChecker(XmlSyntaxChecker.INSTANCE)
+            .withSyntaxChecker(SyntaxChecker.INSTANCE)
             .freeze();
     }
 
-    private static class XmlSyntaxChecker extends AbstractSyntaxChecker {
+    private static class SyntaxChecker extends AbstractSyntaxChecker {
 
-        private static final XmlSyntaxChecker INSTANCE = new XmlSyntaxChecker();
+        private static final SyntaxChecker INSTANCE = new SyntaxChecker();
 
-        private XmlSyntaxChecker() {
+        private SyntaxChecker() {
             super("xml", NodeType.OBJECT);
         }
 
@@ -35,6 +35,7 @@ public class XmlKeyword {
             ProcessingReport processingReport,
             SchemaTree schemaTree) {
 
+            // nothing to do
         }
     }
 }

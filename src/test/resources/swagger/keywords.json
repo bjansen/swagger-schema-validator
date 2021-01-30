@@ -39,6 +39,14 @@
             "required": [
                 "name"
             ],
+            "discriminator": "something",
+            "readOnly": false,
+            "xml": {
+                "name": "xml-user"
+            },
+            "externalDocs": {
+                "url": "..."
+            },
             "example": {
                 "name": "Puma",
                 "id": 1

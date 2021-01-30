@@ -7,15 +7,16 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.core.tree.SchemaTree;
 import com.github.fge.jsonschema.library.Keyword;
 import com.github.fge.msgsimple.bundle.MessageBundle;
+
 import java.util.Collection;
 
 /**
- * A {@link Keyword} for the {@code example} property, used to include an example of an instance for its parent schema.
+ * A {@link Keyword} for the {@code externalDocs} property, used to provide additional docs for a schema.
  */
-public class ExampleKeyword {
+public class ExternalDocsKeyword {
 
     public static Keyword getInstance() {
-        return Keyword.newBuilder("example")
+        return Keyword.newBuilder("externalDocs")
             .withSyntaxChecker(SyntaxChecker.INSTANCE)
             .freeze();
     }
@@ -25,7 +26,7 @@ public class ExampleKeyword {
         private static final SyntaxChecker INSTANCE = new SyntaxChecker();
 
         private SyntaxChecker() {
-            super("example", NodeType.OBJECT, NodeType.values());
+            super("externalDocs", NodeType.OBJECT);
         }
 
         @Override

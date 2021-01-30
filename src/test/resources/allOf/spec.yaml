@@ -23,8 +23,7 @@ definitions:
     properties:
       pet_type:
         type: string
-    discriminator:
-      propertyName: pet_type
+    discriminator: pet_type
   Dog:     # "Dog" is a value for the pet_type property (the discriminator value)
     x-allOf: # Combines the main `Pet` schema with `Dog`-specific properties
       - $ref: '#/definitions/Pet'
