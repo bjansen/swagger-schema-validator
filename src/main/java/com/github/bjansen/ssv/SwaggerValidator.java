@@ -102,9 +102,6 @@ public class SwaggerValidator {
      * @throws IOException         if the payload is not a valid JSON object
      */
     public ProcessingReport validate(String jsonPayload, String definitionPointer) throws ProcessingException, IOException {
-        if (jsonPayload == null || jsonPayload.equals("")) {
-            throw new IOException("Payload is empty");
-        }
         return validate(jsonPayload, definitionPointer, Json.mapper());
     }
 
@@ -112,10 +109,11 @@ public class SwaggerValidator {
      * Same as {@link #validate(String, String)} but with a custom JSON deserializer.
      */
     public ProcessingReport validate(String jsonPayload, String definitionPointer, ObjectMapper jsonMapper) throws ProcessingException, IOException {
-        JsonNode jsonNode = jsonMapper.readTree(jsonPayload);
-        if (jsonNode == null) {
-            throw new IOException("The JSON payload could not be parsed correctly");
+        if (jsonPayload == null || jsonPayload.equals("")) {
+            throw new IOException("Payload is empty");
         }
+
+        JsonNode jsonNode = jsonMapper.readTree(jsonPayload);
 
         return validate(jsonNode, definitionPointer);
     }
@@ -150,14 +148,8 @@ public class SwaggerValidator {
      * @return the patched schema
      */
     private JsonNode transform(JsonNode schema, Map<String, String> transformations) {
-        if (!(schema instanceof ObjectNode)) {
-            return schema;
-        }
-
-        ObjectNode schemaNode = (ObjectNode) schema;
-
-        if (schemaNode.has("definitions")) {
-            for (JsonNode definition : schemaNode.get("definitions")) {
+        if (schema.has("definitions")) {
+            for (JsonNode definition : schema.get("definitions")) {
                 transformRecursively(definition, transformations);
             }
         }

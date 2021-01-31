@@ -1,5 +1,6 @@
 package com.github.bjansen.ssv;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.LogLevel;
@@ -22,6 +23,69 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 
 class SwaggerValidatorTest {
+
+    @Test
+    void should_throw_when_payload_is_null() throws IOException {
+        // Given
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+
+        // When
+        final Executable executable = () -> validator.validate((String) null, "/definitions/User");
+
+        // Then
+        assertThrows(IOException.class, executable);
+    }
+
+    @Test
+    void should_throw_when_payload_is_empty() throws IOException {
+        // Given
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+
+        // When
+        final Executable executable = () -> validator.validate("", "/definitions/User");
+
+        // Then
+        assertThrows(IOException.class, executable);
+    }
+
+    @Test
+    void should_throw_when_payload_is_invalid() throws IOException {
+        // Given
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+
+        // When
+        final Executable executable = () -> validator.validate("brrrrr", "/definitions/User");
+
+        // Then
+        assertThrows(JsonParseException.class, executable);
+    }
+
+    @Test
+    void should_throw_when_validating_with_custom_mapper_and_null_payload() throws IOException {
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+
+        Executable exec = () -> validator.validate(null, "/definitions/User", Json.mapper());
+
+        assertThrows(IOException.class, exec);
+    }
+
+    @Test
+    void should_throw_when_validating_with_custom_mapper_and_empty_payload() throws IOException {
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+
+        Executable exec = () -> validator.validate("", "/definitions/User", Json.mapper());
+
+        assertThrows(IOException.class, exec);
+    }
+
+    @Test
+    void should_throw_when_validating_with_custom_mapper_and_invalid_payload() throws IOException {
+        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+
+        Executable exec = () -> validator.validate("brrrrr", "/definitions/User", Json.mapper());
+
+        assertThrows(JsonParseException.class, exec);
+    }
 
     @Test
     void checkOneOf() throws IOException, ProcessingException {
@@ -90,18 +154,6 @@ class SwaggerValidatorTest {
 
         assertEquals(Json.mapper().readTree(getClass().getResourceAsStream("/transformations/spec-after.json")),
             schemaObject);
-    }
-
-    @Test
-    void should_throw_IOException_when_payload_is_empty() throws IOException {
-        // Given
-        SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
-
-        // When
-        final Executable executable = () -> validator.validate("", "/definitions/User");
-
-        // Then
-        assertThrows(IOException.class, executable);
     }
 
     @Test
