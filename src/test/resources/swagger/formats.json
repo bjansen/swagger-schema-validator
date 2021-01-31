@@ -1,0 +1,46 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Sample API",
+        "version": "1"
+    },
+    "paths": {
+        "/users": {
+            "get": {
+                "summary": "Returns a list of users.",
+                "description": "Optional extended description in Markdown.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "int32": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "int64": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "float": {
+                    "type": "number",
+                    "format": "float"
+                },
+                "double": {
+                    "type": "number",
+                    "format": "double"
+                }
+            }
+        }
+    }
+}
