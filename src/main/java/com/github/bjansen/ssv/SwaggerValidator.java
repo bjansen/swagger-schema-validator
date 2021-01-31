@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SwaggerValidator {
@@ -43,8 +44,16 @@ public class SwaggerValidator {
     private final JsonNode schemaObject;
 
     private SwaggerValidator(JsonNode schemaObject, Map<String, String> customTransformations) {
-        JsonNode transformed = transform(schemaObject, customTransformations);
-        this.schemaObject = transform(transformed, TRANSFORMATIONS);
+        Map<String, String> mergedTransformations;
+
+        if (customTransformations.isEmpty()) {
+            mergedTransformations = TRANSFORMATIONS;
+        } else {
+            mergedTransformations = new LinkedHashMap<>(customTransformations);
+            mergedTransformations.putAll(TRANSFORMATIONS);
+        }
+
+        this.schemaObject = transform(schemaObject, mergedTransformations);
     }
 
     /**
