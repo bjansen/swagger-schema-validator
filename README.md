@@ -21,7 +21,7 @@ This library is available on Maven Central:
 <dependency>
     <groupId>com.github.bjansen</groupId>
     <artifactId>swagger-schema-validator</artifactId>
-    <version>0.4.1</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
