@@ -23,8 +23,6 @@ import com.github.fge.jsonschema.core.report.ListReportProvider;
 import com.github.fge.jsonschema.core.report.LogLevel;
 import com.github.fge.jsonschema.format.draftv3.DateAttribute;
 import com.github.fge.jsonschema.library.DraftV4Library;
-import com.github.fge.jsonschema.library.Keyword;
-import com.github.fge.jsonschema.library.KeywordBuilder;
 import com.github.fge.jsonschema.library.Library;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.messages.JsonSchemaValidationBundle;

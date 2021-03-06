@@ -15,6 +15,10 @@ import java.util.Collection;
  */
 public class XmlKeyword {
 
+    private XmlKeyword() {
+        throw new IllegalStateException();
+    }
+
     public static Keyword getInstance() {
         return Keyword.newBuilder("xml")
             .withSyntaxChecker(SyntaxChecker.INSTANCE)

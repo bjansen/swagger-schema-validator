@@ -15,6 +15,10 @@ import java.util.Collection;
  */
 public class ReadOnlyKeyword {
 
+    private ReadOnlyKeyword() {
+        throw new IllegalStateException();
+    }
+
     public static Keyword getInstance() {
         return Keyword.newBuilder("readOnly")
             .withSyntaxChecker(SyntaxChecker.INSTANCE)

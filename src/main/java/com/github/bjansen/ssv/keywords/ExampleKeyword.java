@@ -14,6 +14,10 @@ import java.util.Collection;
  */
 public class ExampleKeyword {
 
+    private ExampleKeyword() {
+        throw new IllegalStateException();
+    }
+
     public static Keyword getInstance() {
         return Keyword.newBuilder("example")
             .withSyntaxChecker(SyntaxChecker.INSTANCE)

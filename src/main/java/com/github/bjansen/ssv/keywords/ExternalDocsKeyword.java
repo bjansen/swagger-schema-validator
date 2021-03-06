@@ -15,6 +15,10 @@ import java.util.Collection;
  */
 public class ExternalDocsKeyword {
 
+    private ExternalDocsKeyword() {
+        throw new IllegalStateException();
+    }
+
     public static Keyword getInstance() {
         return Keyword.newBuilder("externalDocs")
             .withSyntaxChecker(SyntaxChecker.INSTANCE)

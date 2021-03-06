@@ -15,6 +15,10 @@ import java.util.Collection;
  */
 public class DiscriminatorKeyword {
 
+    private DiscriminatorKeyword() {
+        throw new IllegalStateException();
+    }
+
     public static Keyword getInstance() {
         return Keyword.newBuilder("discriminator")
             .withSyntaxChecker(SyntaxChecker.INSTANCE)
