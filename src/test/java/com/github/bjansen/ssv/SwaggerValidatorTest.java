@@ -11,7 +11,7 @@ import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
-import io.swagger.util.Json;
+import io.swagger.v3.core.util.Json;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;

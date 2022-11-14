@@ -10,8 +10,8 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.common.collect.ImmutableMap;
-import io.swagger.util.Json;
-import io.swagger.util.Yaml;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.core.util.Yaml;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
