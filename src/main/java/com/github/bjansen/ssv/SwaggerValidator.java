@@ -1,11 +1,14 @@
 package com.github.bjansen.ssv;
 
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jsonschema.core.exceptions.JsonReferenceException;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ListProcessingReport;
 import com.github.fge.jsonschema.core.report.LogLevel;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
@@ -136,6 +139,12 @@ public class SwaggerValidator {
      * @throws ProcessingException in case a processing error occurred during validation
      */
     public ProcessingReport validate(JsonNode jsonPayload, String definitionPointer, boolean deepCheck) throws ProcessingException {
+        if (jsonPayload.asToken() == JsonToken.NOT_AVAILABLE) {
+            // Workaround for jackson-coreutils not supporting this enum value: https://github.com/fge/jackson-coreutils/issues/14
+            ListProcessingReport report = new ListProcessingReport();
+            report.error(new ProcessingMessage().setMessage("Payload is empty"));
+            return report;
+        }
         return getSchema(definitionPointer).validate(jsonPayload, deepCheck);
     }
 

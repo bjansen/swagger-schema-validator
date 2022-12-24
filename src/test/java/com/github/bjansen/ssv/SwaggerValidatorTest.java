@@ -2,6 +2,7 @@ package com.github.bjansen.ssv;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.DecimalNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -42,6 +43,20 @@ class SwaggerValidatorTest {
 
             // Then
             assertThrows(IOException.class, executable);
+        }
+
+        @Test
+        void should_throw_when_payload_is_NOT_AVAILABLE() throws IOException, ProcessingException {
+            // Given
+            SwaggerValidator validator = buildValidator("/oneOf/spec.yaml");
+            JsonNode payload = new ObjectMapper().readTree("");
+
+            // When
+            ProcessingReport report = validator.validate(payload, "/definitions/User");
+
+            // Then
+            assertFalse(report.isSuccess());
+            assertTrue(report.toString().contains("Payload is empty"));
         }
 
         @Test
