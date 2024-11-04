@@ -76,7 +76,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.5.2</version>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
